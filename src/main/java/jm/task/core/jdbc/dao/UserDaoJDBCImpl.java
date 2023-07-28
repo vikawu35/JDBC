@@ -1,4 +1,4 @@
-package jm.task.core.jdbc.dao;
+ackage jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
@@ -17,10 +17,10 @@ public class UserDaoJDBCImpl implements UserDao {
     public void createUsersTable() {
         try (Statement statement = connection.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                    "id INT PRIMARY KEY AUTO_INCREMENT," +
-                    "name VARCHAR(50) NOT NULL," +
-                    "lastName VARCHAR(50) NOT NULL," +
-                    "age INTEGER NOT NULL" +
+                    "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                    "name VARCHAR(255) NOT NULL," +
+                    "lastName VARCHAR(255) NOT NULL," +
+                    "age INT NOT NULL" +
                     ")";
             statement.execute(sql);
         } catch (SQLException e) {
@@ -44,11 +44,13 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
+            System.out.println("User with name - " + name + "  added to the database.");
         } catch (SQLException e) {
             System.out.println("User was incorrectly added to the database");
         }
 
     }
+    
 
     public void removeUserById(long id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
@@ -65,12 +67,11 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM users")) {
             while (resultSet.next()) {
-                long id = resultSet.getLong("id");
-                String name = resultSet.getString("name");
-                String lastName = resultSet.getString("lastName");
-                byte age = resultSet.getByte("age");
-
-                User user = new User(name, lastName, age);
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setName(resultSet.getString("name"));
+                user.setLastName(resultSet.getString("lastName"));
+                user.setAge(resultSet.getByte("age"));
                 users.add(user);
             }
         } catch (SQLException e) {
