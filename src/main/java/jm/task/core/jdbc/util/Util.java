@@ -11,6 +11,9 @@ public class Util {
     private static final String PASSWORD = "-15021823wu-";
     private static Connection connection;
 
+    private Util() {
+    }
+
     public static Connection getConnection() {
         try {
             Driver driver = new com.mysql.cj.jdbc.Driver();
